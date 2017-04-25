@@ -52,8 +52,9 @@ class Home extends CI_Controller {
 	public function detail(){
 		$news_id=intval($this->input->get('id'));
 		if($news_id>0){
-			$this->load->model('mdl_news');
+			$this->load->model(array('mdl_news','mdl_user'));
 			$this->load->helper('url');
+			$this->load->library('session');
 
 			// 用户信息
 			$data['user_info']='';

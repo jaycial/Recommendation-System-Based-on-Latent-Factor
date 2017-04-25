@@ -21,3 +21,7 @@ function dislike_mouse_out(id,base_url){
 function jump_login(site_url){
 	window.open(site_url+'home/login');
 }
+
+function like(parame) {
+	alert(parame);
+}

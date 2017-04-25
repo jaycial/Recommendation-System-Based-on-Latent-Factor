@@ -36,7 +36,7 @@
 						</div>
 					<?php elseif('-1' == $like_status):?>
 						<div class="blog-left">
-							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/per_like.png');?>" onclick="like()" onmouseover="like_mouse_on('like_pic','<?php echo base_url();?>')" onmouseout="like_mouse_out('like_pic','<?php echo base_url();?>')"><span id="like_span">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/dislike.png');?>" style="margin-left: 20px" onclick="quit_dislike()" onmouseover="dislike_mouse_on('dislike_pic','<?php echo base_url();?>')" onmouseout="dislike_mouse_out('dislike_pic','<?php echo base_url();?>')"><span id="dislike_span">无聊</span></p>
+							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/per_like.png');?>" onclick="like('<?php echo base_url();?>')" onmouseover="like_mouse_on('like_pic','<?php echo base_url();?>')" onmouseout="like_mouse_out('like_pic','<?php echo base_url();?>')"><span id="like_span">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/dislike.png');?>" style="margin-left: 20px" onclick="quit_dislike()" onmouseover="dislike_mouse_on('dislike_pic','<?php echo base_url();?>')" onmouseout="dislike_mouse_out('dislike_pic','<?php echo base_url();?>')"><span id="dislike_span">无聊</span></p>
 						</div>
 					<?php else:?>
 						<div class="blog-left">

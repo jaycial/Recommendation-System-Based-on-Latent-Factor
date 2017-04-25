@@ -63,7 +63,8 @@ class Mdl_news extends CI_Model {
 					AND
 				rel.news_id={$news_id}
 		";
-		return $res=$this->db->query($sql)->row()->like_status;
+		$res=($this->db->query($sql)->row())?($this->db->query($sql)->row()->like_status):'0';
+		return $res;
 	}
 
 }
