@@ -3,6 +3,7 @@
 	<meta charset="UTF-8">
 	<title>新闻首页</title>
 	<link href="<?php echo base_url();?>front/css/detail.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="<?php echo base_url('front/js/jquery.js')?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('front/js/detail.js')?>"></script>
 </head>
 <body>
@@ -31,16 +32,16 @@
 				<?php echo $news_info->content?>
 				<?php if(''!=$user_info):?>
 					<?php if('1' == $like_status):?>
-						<div class="blog-left">
-							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/like.png');?>" onclick="quit_like()" onmouseover="like_mouse_on('like_pic','<?php echo base_url();?>')" onmouseout="like_mouse_out('like_pic','<?php echo base_url();?>')"><span id="like_span">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/per_dislike.png');?>" style="margin-left: 20px" onclick="dislike()" onmouseover="dislike_mouse_on('dislike_pic','<?php echo base_url();?>')" onmouseout="dislike_mouse_out('dislike_pic','<?php echo base_url();?>')"><span id="dislike_span"">无聊</span></p>
+						<div id="user_interest" class="blog-left">
+							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/like.png');?>"><span id="like_span" style="color:rgb(225,87,72);">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/per_dislike.png');?>" style="margin-left: 20px" onclick="dislike('<?php echo $news_info->news_id;?>','<?php echo $user_info->user_id;?>','<?php echo site_url()?>')" onmouseover="dislike_mouse_on('dislike_pic','<?php echo base_url();?>')" onmouseout="dislike_mouse_out('dislike_pic','<?php echo base_url();?>')"><span id="dislike_span">无聊</span></p>
 						</div>
 					<?php elseif('-1' == $like_status):?>
-						<div class="blog-left">
-							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/per_like.png');?>" onclick="like('<?php echo base_url();?>')" onmouseover="like_mouse_on('like_pic','<?php echo base_url();?>')" onmouseout="like_mouse_out('like_pic','<?php echo base_url();?>')"><span id="like_span">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/dislike.png');?>" style="margin-left: 20px" onclick="quit_dislike()" onmouseover="dislike_mouse_on('dislike_pic','<?php echo base_url();?>')" onmouseout="dislike_mouse_out('dislike_pic','<?php echo base_url();?>')"><span id="dislike_span">无聊</span></p>
+						<div id="user_interest" class="blog-left">
+							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/per_like.png');?>" onclick="like('<?php echo $news_info->news_id;?>','<?php echo $user_info->user_id;?>','<?php echo site_url()?>')" onmouseover="like_mouse_on('like_pic','<?php echo base_url();?>')" onmouseout="like_mouse_out('like_pic','<?php echo base_url();?>')"><span id="like_span">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/dislike.png');?>" style="margin-left: 20px"><span id="dislike_span" style="color:rgb(225,87,72);">无聊</span></p>
 						</div>
 					<?php else:?>
-						<div class="blog-left">
-							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/per_like.png');?>" onclick="like()" onmouseover="like_mouse_on('like_pic','<?php echo base_url();?>')" onmouseout="like_mouse_out('like_pic','<?php echo base_url();?>')"><span id="like_span">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/per_dislike.png');?>" style="margin-left: 20px" onclick="dislike()" onmouseover="dislike_mouse_on('dislike_pic','<?php echo base_url();?>')" onmouseout="dislike_mouse_out('dislike_pic','<?php echo base_url();?>')"><span id="dislike_span">无聊</span></p>
+						<div id="user_interest" class="blog-left">
+							<p style="margin-top: 90px"><img id="like_pic" src="<?php echo base_url('front/images/per_like.png');?>" onclick="like('<?php echo $news_info->news_id;?>','<?php echo $user_info->user_id;?>','<?php echo site_url()?>')" onmouseover="like_mouse_on('like_pic','<?php echo base_url();?>')" onmouseout="like_mouse_out('like_pic','<?php echo base_url();?>')"><span id="like_span">感兴趣</span><img id="dislike_pic" src="<?php echo base_url('front/images/per_dislike.png');?>" style="margin-left: 20px" onclick="dislike('<?php echo $news_info->news_id;?>','<?php echo $user_info->user_id;?>','<?php echo site_url()?>')" onmouseover="dislike_mouse_on('dislike_pic','<?php echo base_url();?>')" onmouseout="dislike_mouse_out('dislike_pic','<?php echo base_url();?>')"><span id="dislike_span">无聊</span></p>
 						</div>
 					<?php endif?>
 				<?php else:?>

@@ -2,6 +2,8 @@
 <head>
 <title>用户注册</title>
 <link href="<?php echo base_url();?>front/css/login_reg.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="<?php echo base_url();?>front/js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>front/js/login_reg.js"></script>
 </head>
 <body>
 <div class="login">
@@ -9,10 +11,11 @@
 	<div class="login-top">
 		<h1>用户注册</h1>
 		<form method="post" action="<?php echo site_url('home/register')?>">
-			<input type="text" name="email" placeholder="Email">
-			<input type="text" name="username" placeholder="User Name">
-			<input type="password" name="password" placeholder="Pass Word">
-			<input type="password" name="cpassword" placeholder="Confirm Your Pass Word">
+			<input type="message" id="message" value="邮箱已被占用" style="display: none">
+			<input type="text" id="email" name="email" placeholder="Email">
+			<input type="text" id="username" name="username" placeholder="User Name">
+			<input type="password" id="pswd" name="password" placeholder="Password">
+			<input type="password" id="cpswd" name="cpassword" placeholder="Confirm Your Password">
 		    <div class="forgot">
 		    	<a href="#">用户协议</a>
 		    	<input type="submit" value="注册" >

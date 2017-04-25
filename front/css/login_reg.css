@@ -55,6 +55,23 @@ body{
   color: #F45B4B;
   margin: 0px 0px 20px 0px;
 }
+
+.login-top input[type="message"]{
+  outline: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgb(225,87,72);
+  padding: 15px 20px;
+  background: rgb(222,202,201);
+  border: 1px solid red;
+  border-radius:25px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius: 25px;
+  -o-border-radius: 25px;
+  margin: 0px 0px 12px 0px;
+  width: 88%;
+  -webkit-appearance: none;
+}
 .login-top input[type="text"] {
 	outline: none;
   font-size: 15px;

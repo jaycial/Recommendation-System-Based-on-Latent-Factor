@@ -73,6 +73,103 @@ class Home extends CI_Controller {
 		}
 	}
 
+	public function ajax_add_like(){
+		$this->load->model('mdl_news');
+		$this->load->helper('url');
+		$news_id=intval($this->input->post('news_id'));
+		$user_id=intval($this->input->post('user_id'));
+
+		// 判断当前状态，决定执行inset还是update
+		$like_status=$this->mdl_news->get_user_like_status($user_id,$news_id);
+		if('0'==$like_status){
+			// 执行insert
+			$value_arr=array(
+					'user_id' => $user_id,
+					'news_id' => $news_id,
+					'like_status' => '1',
+					'create_time' => time(),
+					'update_time' => time(),
+				);
+			$affected_id=$this->mdl_news->insert_user_like_status($value_arr);
+		}else{
+			// 执行更新操作
+			$value_arr=array(
+					'like_status' => '1',
+					'update_time' => time(),
+				);
+			$where_arr=array(
+					'user_id' => $user_id,
+					'news_id' => $news_id,
+				);
+			$affected_id=$this->mdl_news->update_user_like_status($value_arr,$where_arr);
+		}
+		if(isset($affected_id)){
+			// 操作成功
+			$str="
+				<p style=\"margin-top: 90px\"><img id=\"like_pic\" src=\"".base_url('front/images/like.png')."\"><span id=\"like_span\" style=\"color:rgb(225,87,72);\">感兴趣</span><img id=\"dislike_pic\" src=\"".base_url('front/images/per_dislike.png')."\" style=\"margin-left: 20px\" onclick=\"dislike('".$news_id."','".$user_id."','".site_url()."')\" onmouseover=\"dislike_mouse_on('dislike_pic','".base_url()."')\" onmouseout=\"dislike_mouse_out('dislike_pic','".base_url()."')\"><span id=\"dislike_span\">无聊</span></p>
+			";
+			echo $str;
+		}else{
+			var_dump($value_arr);
+		}
+	}
+
+	public function ajax_add_dislike(){
+		$this->load->model('mdl_news');
+		$this->load->helper('url');
+		$news_id=intval($this->input->post('news_id'));
+		$user_id=intval($this->input->post('user_id'));
+
+		// 判断当前状态，决定执行inset还是update
+		$like_status=$this->mdl_news->get_user_like_status($user_id,$news_id);
+		if('0'==$like_status){
+			// 执行insert
+			$value_arr=array(
+					'user_id' => $user_id,
+					'news_id' => $news_id,
+					'like_status' => '-1',
+					'create_time' => time(),
+					'update_time' => time(),
+				);
+			$affected_id=$this->mdl_news->insert_user_like_status($value_arr);
+		}else{
+			// 执行更新操作
+			$value_arr=array(
+					'like_status' => '-1',
+					'update_time' => time(),
+				);
+			$where_arr=array(
+					'user_id' => $user_id,
+					'news_id' => $news_id,
+				);
+			$affected_id=$this->mdl_news->update_user_like_status($value_arr,$where_arr);
+		}
+		if(isset($affected_id)){
+			// 操作成功
+			$str="
+				<p style=\"margin-top: 90px\"><img id=\"like_pic\" src=\"".base_url('front/images/per_like.png')."\" onclick=\"like('".$news_id."','".$user_id."','".site_url()."')\" onmouseover=\"like_mouse_on('like_pic','".base_url()."')\" onmouseout=\"like_mouse_out('like_pic','".base_url()."')\"><span id=\"like_span\">感兴趣</span><img id=\"dislike_pic\" src=\"".base_url('front/images/dislike.png')."\" style=\"margin-left: 20px\"><span id=\"dislike_span\" style=\"color:rgb(225,87,72);\">无聊</span></p>
+			";
+			echo $str;
+		}else{
+			echo "数据库发生错误，请稍后重试";
+		}
+	}
+
+
+	public function ajax_check_email_unique(){
+		$this->load->model('mdl_user');
+		$email=$this->input->post('email');
+		$is_unique=$this->mdl_user->check_email_unique($email);
+		echo $is_unique;
+	}
+
+	public function ajax_check_username_unique(){
+		$this->load->model('mdl_user');
+		$username=$this->input->post('username');
+		$is_unique=$this->mdl_user->check_username_unique($username);
+		echo $is_unique;
+	}
+
 	public function login(){
 		$this->load->helper(array('form', 'url'));
 		$this->load->library(array('form_validation','session'));

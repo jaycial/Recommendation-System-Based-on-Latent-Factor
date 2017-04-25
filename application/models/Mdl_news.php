@@ -67,6 +67,20 @@ class Mdl_news extends CI_Model {
 		return $res;
 	}
 
+	public function insert_user_like_status($value_arr){
+		if(!empty($value_arr)){
+			$this->db->insert('tbl_rel_user_like_news',$value_arr);
+		}
+		return $this->db->insert_id();
+	}
+
+	public function update_user_like_status($value_arr,$where_arr){
+		if(!empty($value_arr) && !empty($where_arr)){
+			$this->db->update('tbl_rel_user_like_news',$value_arr,$where_arr);
+		}
+		return 1;
+	}
+
 }
 
 /* End of file Mdl_news.php */

@@ -10,7 +10,7 @@
 		<h1>用户登录</h1>
 		<form method="post" action="<?php echo site_url('home/login')?>">
 			<input type="text" name='email' placeholder="Email">
-			<input type="password" name='password' placeholder="password">
+			<input type="password" name='password' placeholder="Password">
 		    <div class="forgot">
 		    	<a href="#">忘记密码</a>
 		    	<input type="submit" value="登录" >

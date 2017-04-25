@@ -22,6 +22,17 @@ function jump_login(site_url){
 	window.open(site_url+'home/login');
 }
 
-function like(parame) {
-	alert(parame);
+function like(news_id,user_id,site_url) {
+	$.post(site_url+"home/ajax_add_like",{news_id:news_id,user_id:user_id},function(html){
+		$("#user_interest").html(html);
+	});
 }
+
+function dislike(news_id,user_id,site_url) {
+	$.post(site_url+"home/ajax_add_dislike",{news_id:news_id,user_id:user_id},function(html){
+		$("#user_interest").html(html);
+	});
+}
+
+
+
