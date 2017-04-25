@@ -57,10 +57,13 @@ class Home extends CI_Controller {
 
 			// 用户信息
 			$data['user_info']='';
+			$data['like_status']='0';
 			if(isset($this->session->uid)){
 				$data['user_info']=$this->mdl_user->get_user_info($this->session->uid);
+				$data['like_status']=$this->mdl_news->get_user_like_status($this->session->uid,$news_id);
 			}
 			$data['news_info']=$this->mdl_news->get_news_info($news_id);
+
 
 			$this->load->view('detail', $data);
 		}else{

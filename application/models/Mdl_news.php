@@ -52,6 +52,20 @@ class Mdl_news extends CI_Model {
 		return $res;
 	}
 
+	public function get_user_like_status($user_id,$news_id){
+		$sql="
+			SELECT
+				rel.like_status
+			FROM
+				tbl_rel_user_like_news rel
+			WHERE
+				rel.user_id={$user_id}
+					AND
+				rel.news_id={$news_id}
+		";
+		return $res=$this->db->query($sql)->row()->like_status;
+	}
+
 }
 
 /* End of file Mdl_news.php */

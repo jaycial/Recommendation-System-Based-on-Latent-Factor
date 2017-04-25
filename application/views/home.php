@@ -8,7 +8,7 @@
 	<div id="top">
 		<div id="menu">
 			<ul>
-				<li><img src=http://img.php.cn/upload/course/000/000/004/58171021ac1f3460.png ></li>
+				<li><img src="<?php echo base_url('front/images/logo.png');?>" ></li>
 				<li><a href="<?php echo site_url('home/index?type=1');?>">军事</a></li>
 				<li><a href="<?php echo site_url('home/index?type=2');?>">旅游</a></li>
 				<li><a href="<?php echo site_url('home/index?type=3');?>">科技</a></li>
@@ -31,7 +31,7 @@
 					<div class="blog-left">
 						<p ><a href="<?php echo site_url('home/detail?id='.$value->news_id); ?>" class="title"><?php echo $value->title;?></a></p>
 						<p style="margin-top: 20px"><?php echo $value->abstract;?></p>
-						<p style="margin-top: 90px"><img src="http://img.php.cn/upload/course/000/000/004/58170f99f2430105.png" ><?php echo $value->from;?><img src="http://img.php.cn/upload/course/000/000/004/58170fbda3f34844.png" style="margin-left: 20px"><?php echo $value->source_time;?></p>
+						<p style="margin-top: 90px"><img src="<?php echo base_url('front/images/rep.png');?>" ><?php echo $value->from;?><img src="<?php echo base_url('front/images/time.png');?>" style="margin-left: 20px"><?php echo $value->source_time;?></p>
 					</div>
 					<div class="blog-right">
 						<img src="<?php echo $value->img_url?>">

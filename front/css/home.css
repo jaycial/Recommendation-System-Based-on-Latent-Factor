@@ -7,7 +7,10 @@
  margin: 0px;
  font-size: 14px;
  }
- a:hover{color:red;text-decoration:none;}
+ a:hover{color:rgb(225,87,72);text-decoration:none;}
+ a{
+ 	color: black;
+ }
  #top{
  width: 100%;
  height: 90px;
@@ -18,7 +21,7 @@
  width: 1000px;
  overflow: hidden;
  margin: 0 auto;
-
+ background-color: rgb(225,87,72);
  }
  #menu img{
  height: 90px;
@@ -39,7 +42,7 @@
  display: inline-block;
 
  }
- #menu ul li a:hover{color: #65b5ff;text-decoration: none}
+ #menu ul li a:hover{color:rgb(200,60,50);text-decoration: none}
  #box{
  width: 900px;
  height: 370px;
@@ -159,7 +162,7 @@
  padding-top: 20px;
  }
  .page a{
- border: 1px solid #71b0bb;
+ border: 1px solid black;
  text-decoration: none;
  margin: 5px;
  padding: 5px 10px;
@@ -169,7 +172,7 @@
  }
  .page a:hover,.page a:active{
  color: #FFF;
- background-color: #bbac5c;
+ background-color: rgb(225,87,72);
  }
  .mi{
  padding-left: 90px;

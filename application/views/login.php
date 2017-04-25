@@ -1,13 +1,13 @@
 <html>
 <head>
-<title>Login</title>
+<title>用户登录</title>
 <link href="<?php echo base_url();?>front/css/login_reg.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div class="login">
-	<h2>Acced Form</h2>
+	<h2>新闻推荐系统</h2>
 	<div class="login-top">
-		<h1>LOGIN FORM</h1>
+		<h1>用户登录</h1>
 		<form method="post" action="<?php echo site_url('home/login')?>">
 			<input type="text" name='email' placeholder="Email">
 			<input type="password" name='password' placeholder="password">
