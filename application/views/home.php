@@ -29,7 +29,7 @@
 			<?php foreach ($news_info as $value): ?>
 				<li>
 					<div class="blog-left">
-						<p ><a href="detail.html" class="title"><?php echo $value->title;?></a></p>
+						<p ><a href="<?php echo site_url('home/detail?id='.$value->news_id); ?>" class="title"><?php echo $value->title;?></a></p>
 						<p style="margin-top: 20px"><?php echo $value->abstract;?></p>
 						<p style="margin-top: 90px"><img src="http://img.php.cn/upload/course/000/000/004/58170f99f2430105.png" ><?php echo $value->from;?><img src="http://img.php.cn/upload/course/000/000/004/58170fbda3f34844.png" style="margin-left: 20px"><?php echo $value->source_time;?></p>
 					</div>

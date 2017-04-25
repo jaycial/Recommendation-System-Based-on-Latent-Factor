@@ -49,6 +49,26 @@ class Home extends CI_Controller {
 		$this->load->view('home',$data);
 	}
 
+	public function detail(){
+		$news_id=intval($this->input->get('id'));
+		if($news_id>0){
+			$this->load->model('mdl_news');
+			$this->load->helper('url');
+
+			// 用户信息
+			$data['user_info']='';
+			if(isset($this->session->uid)){
+				$data['user_info']=$this->mdl_user->get_user_info($this->session->uid);
+			}
+			$data['news_info']=$this->mdl_news->get_news_info($news_id);
+
+			$this->load->view('detail', $data);
+		}else{
+			// 非法ID
+			redirect('home/index');
+		}
+	}
+
 	public function login(){
 		$this->load->helper(array('form', 'url'));
 		$this->load->library(array('form_validation','session'));

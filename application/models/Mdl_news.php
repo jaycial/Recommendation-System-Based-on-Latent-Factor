@@ -37,6 +37,21 @@ class Mdl_news extends CI_Model {
 		return $res->num;
 	}
 
+	public function get_news_info($news_id){
+		$sql="
+			SELECT
+				news_id,title,img_url,content
+			FROM
+				tbl_news news
+			WHERE
+				news.`status`=0
+					AND
+				news.news_id={$news_id}
+		";
+		$res=$this->db->query($sql)->row();
+		return $res;
+	}
+
 }
 
 /* End of file Mdl_news.php */
