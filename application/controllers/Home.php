@@ -214,7 +214,7 @@ class Home extends CI_Controller {
 		$cpassword=$this->input->post('cpassword');
 		// 设定表单过滤规则
 		$this->form_validation->set_rules('email', '注册邮箱' , 'trim|required|valid_email');
-		$this->form_validation->set_rules('username', '用户名' , 'trim|required|min_length[4]|max_length[10]');
+		$this->form_validation->set_rules('username', '用户名' , 'trim|required|min_length[2]|max_length[10]');
 		$this->form_validation->set_rules('password', '密码' , 'trim|required|min_length[4]|max_length[10]');
 		$this->form_validation->set_rules('cpassword', '确认密码' , 'trim|required|matches[password]');
 		if ($this->form_validation->run() == true){
