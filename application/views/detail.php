@@ -25,7 +25,6 @@
 			</ul>
 		</div>
 	</div>
-
 	<div id="blog">
 		<ul>
 			<li>
@@ -52,5 +51,27 @@
 			</li>
 		</ul>
 	</div>
+	<?php if(''!=$user_info):?>
+		<script type="text/javascript">
+			$(document).ready(function(){ 
+				var score = <?php echo $user_score;?>;
+				if(score == -1 || score == 3){
+					setTimeout(function(){
+						var site_url = '<?php echo site_url();?>';
+						var news_id = '<?php echo $news_info->news_id;?>'
+						var user_id = '<?php echo $user_info->user_id;?>'
+						$.post(site_url+"home/ajax_open_page_score",{news_id:news_id,user_id:user_id},function(status){
+							if(status){
+								// TODO 可用于打断点
+								return;
+							}
+						});
+					}, 10000);  
+				}else{
+					return;
+				}
+			});
+		</script>
+	<?php endif?>
 </body>
 </html>

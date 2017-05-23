@@ -71,6 +71,44 @@ class Mdl_user extends CI_Model {
 		return ($res->num > 0)?false:true;
 	}
 
+	// 计算用户总数
+	public function get_total_user_count(){
+		$sql="
+			SELECT
+				COUNT(*) as num
+			FROM
+				(SELECT
+					u.user_id
+				FROM
+					(SELECT * FROM tbl_user WHERE `status` = 0) u 
+						INNER JOIN
+					tbl_rel_user_like_news rel ON rel.user_id=u.user_id
+						INNER JOIN
+					(SELECT * FROM tbl_news WHERE `status` = 0) news ON news.news_id=rel.news_id
+				GROUP BY 
+					u.user_id) a
+		";
+		return $this->db->query($sql)->row()->num;
+	}
+
+	public function get_martix_user_id_list(){
+		$sql="
+			SELECT
+				u.user_id
+			FROM
+				(SELECT * FROM tbl_user WHERE `status` = 0) u 
+					INNER JOIN
+				tbl_rel_user_like_news rel ON rel.user_id=u.user_id
+					INNER JOIN
+				(SELECT * FROM tbl_news WHERE `status` = 0) news ON news.news_id=rel.news_id
+			GROUP BY 
+				u.user_id
+			ORDER BY 
+				u.user_id ASC
+		";
+		return $this->db->query($sql)->result();
+	}
+
 }
 
 /* End of file Mdl_user.php */

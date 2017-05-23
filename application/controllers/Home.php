@@ -7,11 +7,6 @@ class Home extends CI_Controller {
 		$this->load->library('session');
 		$this->load->helper('url');
 		$this->load->model(array('mdl_user','mdl_news'));
-		// 用户信息
-		$data['user_info']='';
-		if(isset($this->session->uid)){
-			$data['user_info']=$this->mdl_user->get_user_info($this->session->uid);
-		}
 		// 分页
 		$data['per_page']=$per_page=10;
 		$data['type']=$type=intval($this->input->get('type'))>0?intval($this->input->get('type')):'1';
@@ -40,12 +35,20 @@ class Home extends CI_Controller {
 				break;
 		}
 		$data['page']=$page=intval($this->input->get('page'))>0?intval($this->input->get('page')):'1';
-		$data['total']=$total=$this->mdl_news->get_news_count($type);
-		$data['total_page']=($total%$per_page==0)?($total/$per_page):(($total/$per_page)+1);
-		$limit=($page-1)*$per_page;
-		
-		$data['news_info']=$this->mdl_news->get_news_list($type,$limit,$per_page);
-
+		// 用户信息
+		$data['user_info']='';
+		if(isset($this->session->uid)){
+			$data['user_info']=$this->mdl_user->get_user_info($this->session->uid);
+			$data['total']=$total=$this->mdl_news->get_news_count($type,$this->session->uid);
+			$data['total_page']=($total%$per_page==0)?($total/$per_page):(($total/$per_page)+1);
+			$limit=($page-1)*$per_page;
+			$data['news_info']=$this->mdl_news->get_news_list($type,$limit,$per_page,$this->session->uid);
+		}else{
+			$data['total']=$total=$this->mdl_news->get_news_count($type);
+			$data['total_page']=($total%$per_page==0)?($total/$per_page):(($total/$per_page)+1);
+			$limit=($page-1)*$per_page;
+			$data['news_info']=$this->mdl_news->get_news_list($type,$limit,$per_page);
+		}
 		$this->load->view('home',$data);
 	}
 
@@ -65,6 +68,20 @@ class Home extends CI_Controller {
 			}
 			$data['news_info']=$this->mdl_news->get_news_info($news_id);
 
+			// 判断用户是否已登陆，若已登陆，则计分
+			if(isset($this->session->uid)){
+				$data['user_score']=$user_score=$this->mdl_news->get_user_score_status($this->session->uid,$news_id);
+				if($user_score == -1){	//访问详情的评分优先性最低，只能进行insert
+					$value_arr=array(
+						'user_id' => $this->session->uid,
+						'news_id' => $news_id,
+						'create_time' => time(),
+						'update_time' => time(),
+						'score'	=>	'3',
+					);
+					$this->db->insert('tbl_rel_user_like_news',$value_arr);
+				}
+			}
 
 			$this->load->view('detail', $data);
 		}else{
@@ -80,8 +97,8 @@ class Home extends CI_Controller {
 		$user_id=intval($this->input->post('user_id'));
 
 		// 判断当前状态，决定执行inset还是update
-		$like_status=$this->mdl_news->get_user_like_status($user_id,$news_id);
-		if('0'==$like_status){
+		$like_status=$this->mdl_news->get_user_score_status($user_id,$news_id);
+		if('-1'==$like_status){
 			// 执行insert
 			$value_arr=array(
 					'user_id' => $user_id,
@@ -89,6 +106,7 @@ class Home extends CI_Controller {
 					'like_status' => '1',
 					'create_time' => time(),
 					'update_time' => time(),
+					'score'	=>	'5',
 				);
 			$affected_id=$this->mdl_news->insert_user_like_status($value_arr);
 		}else{
@@ -96,6 +114,7 @@ class Home extends CI_Controller {
 			$value_arr=array(
 					'like_status' => '1',
 					'update_time' => time(),
+					'score'	=>	'5',
 				);
 			$where_arr=array(
 					'user_id' => $user_id,
@@ -121,8 +140,8 @@ class Home extends CI_Controller {
 		$user_id=intval($this->input->post('user_id'));
 
 		// 判断当前状态，决定执行inset还是update
-		$like_status=$this->mdl_news->get_user_like_status($user_id,$news_id);
-		if('0'==$like_status){
+		$like_status=$this->mdl_news->get_user_score_status($user_id,$news_id);
+		if('-1'==$like_status){
 			// 执行insert
 			$value_arr=array(
 					'user_id' => $user_id,
@@ -130,6 +149,7 @@ class Home extends CI_Controller {
 					'like_status' => '-1',
 					'create_time' => time(),
 					'update_time' => time(),
+					'score'	=>	'2',
 				);
 			$affected_id=$this->mdl_news->insert_user_like_status($value_arr);
 		}else{
@@ -137,6 +157,7 @@ class Home extends CI_Controller {
 			$value_arr=array(
 					'like_status' => '-1',
 					'update_time' => time(),
+					'score'	=>	'2',
 				);
 			$where_arr=array(
 					'user_id' => $user_id,
@@ -152,6 +173,76 @@ class Home extends CI_Controller {
 			echo $str;
 		}else{
 			echo "数据库发生错误，请稍后重试";
+		}
+	}
+
+	public function ajax_never_show(){
+		$this->load->library('session');
+		$this->load->model('mdl_news');
+		$news_id=$this->input->post('news_id');
+		$user_id=$this->input->post('user_id');
+		if($this->session->uid != $user_id){
+			return;
+		}else{
+			// 判断当前状态，决定执行inset还是update
+			$do_update=$this->mdl_news->get_user_score_status($user_id,$news_id);
+			if(-1 != $do_update){
+				// 执行更新操作
+				$value_arr=array(
+						'update_time' => time(),
+						'score'	=>	'1',
+					);
+				$where_arr=array(
+						'user_id' => $user_id,
+						'news_id' => $news_id,
+					);
+				echo  $this->db->update('tbl_rel_user_like_news',$value_arr,$where_arr);
+			}else{
+				// 执行insert
+				$value_arr=array(
+						'user_id' => $user_id,
+						'news_id' => $news_id,
+						'create_time' => time(),
+						'update_time' => time(),
+						'score'	=>	'1',
+					);
+				echo  $this->db->insert('tbl_rel_user_like_news',$value_arr);
+			}
+		}
+	}
+
+
+	public function ajax_open_page_score(){
+		$this->load->library('session');
+		$this->load->model('mdl_news');
+		$news_id=$this->input->post('news_id');
+		$user_id=$this->input->post('user_id');
+		if($this->session->uid != $user_id){
+			return;
+		}else{
+			$score=$this->mdl_news->get_user_score_status($user_id,$news_id);
+			if($score == 3){
+				// 执行更新操作
+				$value_arr=array(
+						'update_time' => time(),
+						'score'	=>	'4',
+					);
+				$where_arr=array(
+						'user_id' => $user_id,
+						'news_id' => $news_id,
+					);
+				echo  $this->db->update('tbl_rel_user_like_news',$value_arr,$where_arr);
+			}else{
+				// 执行insert
+				$value_arr=array(
+						'user_id' => $user_id,
+						'news_id' => $news_id,
+						'create_time' => time(),
+						'update_time' => time(),
+						'score'	=>	'4',
+					);
+				echo  $this->db->insert('tbl_rel_user_like_news',$value_arr);
+			}
 		}
 	}
 
