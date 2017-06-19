@@ -104,8 +104,8 @@ int main(int argc,char ** argv)
   }
 
 
-  int N=scale_arr[0]; //用户数 
-  int M=scale_arr[1]; //物品数 
+  int N=scale_arr[0]; //物品数 
+  int M=scale_arr[1]; //用户数 
   int K=5; //主题个数 
   double *R=new double[N*M]; 
   double *P=new double[N*K]; 
@@ -120,7 +120,7 @@ int main(int argc,char ** argv)
     p=strtok(NULL,d);
   }
 
-  //初始化P，Q矩阵，这里简化了，通常也可以对服从正态分布的数据进行随机数生成 
+  //初始化P，Q矩阵 
   srand(1); 
   for(int i=0;i<N;++i) 
     for(int j=0;j<K;++j) 

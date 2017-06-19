@@ -7,9 +7,17 @@ class Home extends CI_Controller {
 		$this->load->library('session');
 		$this->load->helper('url');
 		$this->load->model(array('mdl_user','mdl_news'));
+		$recommend=false;
 		// 分页
 		$data['per_page']=$per_page=10;
 		$data['type']=$type=intval($this->input->get('type'))>0?intval($this->input->get('type')):'1';
+		if(7 == $type){
+			if(isset($this->session->uid)){
+				$recommend=true;
+			}else{
+				$type=1;
+			}
+		}
 		switch ($type) {
 			case '1':
 				$type='war';
@@ -37,18 +45,27 @@ class Home extends CI_Controller {
 		$data['page']=$page=intval($this->input->get('page'))>0?intval($this->input->get('page')):'1';
 		// 用户信息
 		$data['user_info']='';
-		if(isset($this->session->uid)){
+		if($recommend){
 			$data['user_info']=$this->mdl_user->get_user_info($this->session->uid);
-			$data['total']=$total=$this->mdl_news->get_news_count($type,$this->session->uid);
+			$data['total']=$total=$this->mdl_news->get_news_count_recommend($this->session->uid);
 			$data['total_page']=($total%$per_page==0)?($total/$per_page):(($total/$per_page)+1);
 			$limit=($page-1)*$per_page;
-			$data['news_info']=$this->mdl_news->get_news_list($type,$limit,$per_page,$this->session->uid);
+			$data['news_info']=$this->mdl_news->get_news_list_recommend($limit,$per_page,$this->session->uid);
 		}else{
-			$data['total']=$total=$this->mdl_news->get_news_count($type);
-			$data['total_page']=($total%$per_page==0)?($total/$per_page):(($total/$per_page)+1);
-			$limit=($page-1)*$per_page;
-			$data['news_info']=$this->mdl_news->get_news_list($type,$limit,$per_page);
+			if(isset($this->session->uid)){
+				$data['user_info']=$this->mdl_user->get_user_info($this->session->uid);
+				$data['total']=$total=$this->mdl_news->get_news_count($type,$this->session->uid);
+				$data['total_page']=($total%$per_page==0)?($total/$per_page):(($total/$per_page)+1);
+				$limit=($page-1)*$per_page;
+				$data['news_info']=$this->mdl_news->get_news_list($type,$limit,$per_page,$this->session->uid);
+			}else{
+				$data['total']=$total=$this->mdl_news->get_news_count($type);
+				$data['total_page']=($total%$per_page==0)?($total/$per_page):(($total/$per_page)+1);
+				$limit=($page-1)*$per_page;
+				$data['news_info']=$this->mdl_news->get_news_list($type,$limit,$per_page);
+			}
 		}
+		
 		$this->load->view('home',$data);
 	}
 
@@ -221,7 +238,7 @@ class Home extends CI_Controller {
 			return;
 		}else{
 			$score=$this->mdl_news->get_user_score_status($user_id,$news_id);
-			if($score == 3){
+			if(3 == $score){
 				// 执行更新操作
 				$value_arr=array(
 						'update_time' => time(),
@@ -232,16 +249,6 @@ class Home extends CI_Controller {
 						'news_id' => $news_id,
 					);
 				echo  $this->db->update('tbl_rel_user_like_news',$value_arr,$where_arr);
-			}else{
-				// 执行insert
-				$value_arr=array(
-						'user_id' => $user_id,
-						'news_id' => $news_id,
-						'create_time' => time(),
-						'update_time' => time(),
-						'score'	=>	'4',
-					);
-				echo  $this->db->insert('tbl_rel_user_like_news',$value_arr);
 			}
 		}
 	}

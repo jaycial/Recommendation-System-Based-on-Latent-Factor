@@ -143,6 +143,25 @@
  width: 280px;
  height: 200px;
  }
+
+.notice-left{
+ float: left;
+ width: 20%;
+ overflow: hidden;
+
+ }
+ .notice-right{
+ float: left;
+ margin-left: 40%;
+
+ width: 70%;
+ overflow: hidden;
+ }
+ .notice-right img{
+ width: 80%;
+ height: 50%;
+ }
+
  .title{
  text-decoration:none;
  font-size: 26px;
@@ -250,4 +269,8 @@
  }
  .pl-input2{
  background-color: #65b5ff;color: white;width: 110px;height: 40px;margin-left: 580px
+ }
+
+ .pic-notice{
+ 	text-align: center;
  }

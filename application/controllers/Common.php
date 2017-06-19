@@ -13,7 +13,7 @@ class Common extends CI_Controller {
 	public function get_news_data_from_api(){
 		$this->load->database();
 		$type_arr=array('war','travel','tech','edu','ent','money');
-		$url = 'http://wangyi.butterfly.mopaasapp.com/news/api?page=1&limit=1&type=';
+		$url = 'http://wangyi.butterfly.mopaasapp.com/news/api?page=1&limit=50&type=';
 		foreach ($type_arr as $value) {
 			$news_data_info=json_decode(file_get_contents($url.$value));
 			if(isset($news_data_info->list)){
@@ -55,15 +55,15 @@ class Common extends CI_Controller {
 		$user_id_list=$this->mdl_user->get_martix_user_id_list();
 		$item_id_list=$this->mdl_news->get_martix_news_id_list();
 		// 构造U-I id列表
-		$u_i_str='';
+		$user_id_str='';
 		foreach ($user_id_list as $value) {
-			$u_i_str .= ($value->user_id . ',');
+			$user_id_str .= ($value->user_id . ',');
 		}
 
-		$u_i_str .= "\n";
+		$item_id_str = '';
 
 		foreach ($item_id_list as $value) {
-			$u_i_str .= ($value->news_id . ',');
+			$item_id_str .= ($value->news_id . ',');
 		}
 		// 构造U-I数据矩阵
 		$u_i_martix=$this->mdl_martix->get_u_i_martix();
@@ -94,13 +94,49 @@ class Common extends CI_Controller {
 			$item_id = $value->news_id;
 
 		}
-		$res_str = $user_count . "," . $item_count . "\n" . $martix_str;
+		// foreach结束，判断最后一个项目是否被全部遍历
+		while ($count++ < $user_count) {
+			$martix_str .= '0,';	//拼接字符串用于存储本地
+			$count++;		//记录有多少用户对此项目进行了评分
+		}
+
+		$res_str = $item_count . "," . $user_count . "\n" . $martix_str;
 		// 将数据存于本地
 		file_put_contents('martix_data/data.txt', $res_str);
-		file_put_contents('martix_data/user_item_list.txt', $u_i_str);
+		file_put_contents('martix_data/user_id.txt', $user_id_str);
+		file_put_contents('martix_data/item_id.txt', $item_id_str);
 		echo "ok";
 	}
 
+	/*
+	将算法处理后的矩阵数据转存回数据库
+	*/ 
+	public function load_u_i_to_db(){
+		$this->load->database();
+		$result_martix=trim(file_get_contents('martix_data/data_result_list.txt'),',');
+		$user_id_str=trim(file_get_contents('martix_data/user_id.txt'),',');
+		$item_id_str=trim(file_get_contents('martix_data/item_id.txt'),',');
+
+		$user_id_arr=explode(',',$user_id_str);
+		$item_id_arr=explode(',',$item_id_str);
+		$score_arr=explode(',',$result_martix);
+		// 清空现有表
+		$this->db->empty_table('tbl_result_martix');
+		$i=0;
+		foreach ($item_id_arr as $value) {
+			foreach ($user_id_arr as $data) {
+				$value_arr=array(
+						'user_id'		=>	$data,
+						'item_id'		=>	$value,
+						'score'			=>	$score_arr[$i++],
+						'update_time'	=>	time(),
+					);
+				$this->db->insert('tbl_result_martix',$value_arr);
+			}
+		}
+		echo "OK";
+		
+	}
 }
 
 /* End of file Common.php */

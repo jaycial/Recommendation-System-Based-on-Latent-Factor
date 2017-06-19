@@ -53,6 +53,31 @@ class Mdl_news extends CI_Model {
 		return $res;
 	}
 
+	public function get_news_list_recommend($limit,$per_page,$user_id){
+		$sql="
+			SELECT
+				news.news_id,news.title,news.img_url,news.source_time,news.abstract,news.from
+			FROM
+				tbl_news news 
+					INNER JOIN 
+				tbl_result_martix r_m ON news.news_id=r_m.item_id
+					LEFT JOIN
+				(SELECT * FROM tbl_rel_user_like_news rel WHERE rel.user_id ={$user_id}) n ON r_m.item_id=n.news_id
+			WHERE
+				n.rel_id IS NULL
+					AND
+				r_m.user_id={$user_id}
+					AND 
+				r_m.score > 3
+			ORDER BY 
+				r_m.score DESC
+			LIMIT 
+				$limit,$per_page
+		";		
+		$res=$this->db->query($sql)->result();
+		return $res;
+	}
+
 	public function get_news_count($type,$user_id = ''){
 		if('' == $user_id){
 			$sql="
@@ -95,6 +120,27 @@ class Mdl_news extends CI_Model {
 			return $res->num;
 		}
 		
+	}
+
+	public function get_news_count_recommend($user_id){
+		$sql="
+			SELECT
+				COUNT(*) as num
+			FROM
+				tbl_news new 
+					INNER JOIN 
+				tbl_result_martix r_m ON new.news_id=r_m.item_id
+					LEFT JOIN
+				(SELECT * FROM tbl_rel_user_like_news rel WHERE rel.user_id ={$user_id}) n ON r_m.item_id=n.news_id
+			WHERE
+				n.rel_id IS NULL
+					AND
+				r_m.user_id={$user_id}
+					AND 
+				r_m.score > 3
+		";
+		$res=$this->db->query($sql)->row();
+		return $res->num;		
 	}
 
 	public function get_news_info($news_id,$user_id = ''){
